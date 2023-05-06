@@ -22,17 +22,14 @@ class ParserState():
     
     def next_lex(self, input_str):
         try:
-            print("input_str: ", input_str)
             self.parser.parse(input_str)
         except UnexpectedCharacters:
             # return the last set of expected tokens if we're mid-token
-            print("partial_token: ", self.partial_token, "last_expected: ", self.last_expected)
             self.partial_token = input_str
             return self.last_expected
         except UnexpectedInput as e:
             expected_tokens = e.expected
             self.last_expected = expected_tokens
-            print("expected_tokens: ", expected_tokens)
             return expected_tokens
  
         return []
@@ -51,9 +48,6 @@ def complete_cf(prompt:str, parser, partial_completion, tokenizer: PreTrainedTok
     parser_state = ParserState(parser )
     
     while gen_tokens < max_new_tokens:
-        prompt_token_ids = tokenizer.encode(prompt_plus_completion, return_tensors="pt")
-        prompt_token_ids.shape[1]
-
         valid_next_lex = parser_state.next_lex(partial_completion)
         if len(valid_next_lex) == 0 or (len(valid_next_lex) == 1 and '$END' in valid_next_lex):
             break

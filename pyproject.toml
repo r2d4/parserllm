@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "parserllm"
+version = "0.0.1"
+description = "Force LLMs to use a specific context-free grammar in completions"
+authors = ["Matt Rickard <pypi@matt-rickard.com>"]
+maintainers = ["Matt Rickard <pypi@matt-rickard.com>"]
+readme = "README.md"
+license = "MIT"
+packages = [{include = "parserllm"}]
+keywords = [
+  "llm",
+  "ai",
+  "prompt",
+  "large language models",
+  "gpt-3",
+  "chatgpt",
+]
+urls = { repository = "https://github.com/r2d4/parserllm" }
+
+[tool.poetry.dependencies]
+python = "^3.11"
+rellm = "0.0.5"
+lark = "^1.1.5"
+transformers = "^4.28.1"
+regex = "^2023.5.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

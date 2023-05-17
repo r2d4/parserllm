@@ -1,6 +1,6 @@
 
 import regex
-from lark import UnexpectedCharacters, UnexpectedInput
+from lark import UnexpectedInput, Lark
 from rellm import complete_re
 from transformers import PreTrainedModel, PreTrainedTokenizer
 
@@ -15,22 +15,18 @@ def extract_terminal_regex(parser, stop_token):
     return regex_map
 
 class ParserState():
-    def __init__(self, parser):
-        self.parser = parser
-        self.last_expected = []
+    def __init__(self, parser:Lark):
+        self.parser:Lark = parser
         self.partial_token = ""
     
     def next_lex(self, input_str):
         try:
             self.parser.parse(input_str)
-        except UnexpectedCharacters:
-            # return the last set of expected tokens if we're mid-token
-            self.partial_token = input_str
-            return self.last_expected
         except UnexpectedInput as e:
-            expected_tokens = e.expected
-            self.last_expected = expected_tokens
-            return expected_tokens
+            # Assuming that self.parser is always LALR
+            interactive = self.parser.parse_interactive(input_str)
+            interactive.exhaust_lexer()
+            return interactive.accepts()
  
         return []
 
@@ -52,9 +48,8 @@ def complete_cf(prompt:str, parser, partial_completion, tokenizer: PreTrainedTok
         if len(valid_next_lex) == 0 or (len(valid_next_lex) == 1 and '$END' in valid_next_lex):
             break
         r = [terminal_regexes[t] for t in valid_next_lex]
-
-        next_token_completion = complete_re(prompt_plus_completion, r, tokenizer, model, stop_after_match=True, debug=debug, **model_kwargs)
-
+        if debug:print(f"valid next token: {r}")
+        next_token_completion = complete_re(prompt_plus_completion, r, tokenizer, model, max_new_tokens=max_new_tokens, stop_after_match=True, debug=debug, **model_kwargs)
         partial_completion += next_token_completion
         prompt_plus_completion = prompt_plus_completion + next_token_completion
         gen_tokens += 1

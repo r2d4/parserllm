@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "parserllm"
-version = "0.0.1"
+version = "0.0.2"
 description = "Force LLMs to use a specific context-free grammar in completions"
 authors = ["Matt Rickard <pypi@matt-rickard.com>"]
 maintainers = ["Matt Rickard <pypi@matt-rickard.com>"]

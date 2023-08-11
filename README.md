@@ -4,6 +4,9 @@ Use a context-free grammar and a parser generator to determine valid next tokens
 
 Extending [ReLLM](https://github.com/r2d4/rellm) to handle context-free grammars in addition to regular expressions.
 
+*If you are looking to use this library in production, check out the Context-Free Grammar Completion API from the [Thiggle API](https://docs.thiggle.com/#context-free-grammar-completion-api)*
+
+
 ### Usage
 
 ```bash
